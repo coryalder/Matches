@@ -9,15 +9,15 @@
 import Foundation
 
 
-extension NSTextCheckingResult: SequenceType {
-    public func generate() -> AnyGenerator<NSRange> {
+extension NSTextCheckingResult: Sequence {
+    public func makeIterator() -> AnyIterator<NSRange> {
         // keep the index of the next car in the iteration
         var nextIndex = 1
         
         // Construct a GeneratorOf<Car> instance,
         // passing a closure that returns the next
         // car in the iteration
-        return AnyGenerator<NSRange> {
+        return AnyIterator<NSRange> {
             if nextIndex > self.numberOfRanges-1 {
                 return nil
             }
