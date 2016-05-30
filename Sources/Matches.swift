@@ -21,7 +21,7 @@ extension NSTextCheckingResult: Sequence {
             if nextIndex > self.numberOfRanges-1 {
                 return nil
             }
-            let current = self.rangeAtIndex(nextIndex)
+            let current = self.range(at: nextIndex)
             nextIndex += 1
             return current
         }
@@ -30,11 +30,11 @@ extension NSTextCheckingResult: Sequence {
 
 extension String {
     
-    public func everyMatch(pattern: String, options: NSRegularExpressionOptions = [.AnchorsMatchLines]) -> [[String]]? {
+    public func everyMatch(pattern: String, options: NSRegularExpressionOptions = [.anchorsMatchLines]) -> [[String]]? {
         
         let regex = try? NSRegularExpression(pattern: pattern, options: options)
         
-        let maybeResults = regex?.matchesInString(self, options: [], range: NSMakeRange(0, self.characters.count))
+        let maybeResults = regex?.matches(in: self, options: [], range: NSMakeRange(0, self.characters.count))
         
         guard let results = maybeResults else {
             return nil
@@ -47,7 +47,7 @@ extension String {
             var row = [String]()
             
             for match in res where match.location != NSNotFound {
-                row.append((self as NSString).substringWithRange(match))
+                row.append((self as NSString).substring(with: match))
             }
             
             let filteredRow = row.filter { $0.characters.count > 0 }
@@ -62,16 +62,16 @@ extension String {
         
     }
     
-    public func firstMatching(pattern: String, options: NSRegularExpressionOptions = [.AnchorsMatchLines]) -> String? {
+    public func firstMatching(pattern: String, options: NSRegularExpressionOptions = [.anchorsMatchLines]) -> String? {
         let regex = try? NSRegularExpression(pattern: pattern, options: options)
-        let result = regex?.firstMatchInString(self, options: [], range: NSMakeRange(0, self.characters.count))
+        let result = regex?.firstMatch(in: self, options: [], range: NSMakeRange(0, self.characters.count))
         
         guard result?.numberOfRanges > 1,
-            let firstRange = result?.rangeAtIndex(1) where firstRange.location != NSNotFound else {
+            let firstRange = result?.range(at: 1) where firstRange.location != NSNotFound else {
                 return nil
         }
         
-        return (self as NSString).substringWithRange(firstRange)
+        return (self as NSString).substring(with: firstRange)
     }
 }
 
