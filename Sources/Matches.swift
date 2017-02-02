@@ -21,7 +21,7 @@ extension NSTextCheckingResult: Sequence {
             if nextIndex > self.numberOfRanges-1 {
                 return nil
             }
-            let current = self.range(at: nextIndex)
+            let current = self.rangeAt(nextIndex)
             nextIndex += 1
             return current
         }
@@ -30,7 +30,7 @@ extension NSTextCheckingResult: Sequence {
 
 extension String {
     
-    public func everyMatch(pattern: String, options: NSRegularExpressionOptions = [.anchorsMatchLines]) -> [[String]]? {
+    public func everyMatch(pattern: String, options: NSRegularExpression.Options = [.anchorsMatchLines]) -> [[String]]? {
         
         let regex = try? NSRegularExpression(pattern: pattern, options: options)
         
@@ -62,12 +62,12 @@ extension String {
         
     }
     
-    public func firstMatching(pattern: String, options: NSRegularExpressionOptions = [.anchorsMatchLines]) -> String? {
+    public func firstMatching(pattern: String, options: NSRegularExpression.Options = [.anchorsMatchLines]) -> String? {
         let regex = try? NSRegularExpression(pattern: pattern, options: options)
         let result = regex?.firstMatch(in: self, options: [], range: NSMakeRange(0, self.characters.count))
         
-        guard result?.numberOfRanges > 1,
-            let firstRange = result?.range(at: 1) where firstRange.location != NSNotFound else {
+        guard let rangeCount = result?.numberOfRanges, rangeCount > 1,
+            let firstRange = result?.rangeAt(1), firstRange.location != NSNotFound else {
                 return nil
         }
         
